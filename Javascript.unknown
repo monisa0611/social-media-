@@ -1,0 +1,169 @@
+// Select the create post form and add an event listener to it
+const createPostForm = document.querySelector('.create-post form');
+createPostForm.addEventListener('submit', createPost);
+
+// Create a function to handle the create post form submission
+function createPost(event) {
+  event.preventDefault(); // prevent the default form submission behavior
+
+  // Select the input fields and retrieve their values
+  const authorInput = document.querySelector('#author');
+  const titleInput = document.querySelector('#title');
+  const bodyInput = document.querySelector('#body');
+  const author = authorInput.value;
+  const title = titleInput.value;
+  const body = bodyInput.value;
+
+  // Create a new post element with the retrieved values
+  const post = document.createElement('div');
+  post.classList.add('post');
+
+  const postAuthor = document.createElement('h3');
+  postAuthor.textContent = author;
+
+  const postTitle = document.createElement('h2');
+  postTitle.textContent = title;
+
+  const postBody = document.createElement('p');
+  postBody.textContent = body;
+
+  const postActions = document.createElement('div');
+  postActions.classList.add('post-actions');
+
+  const likeButton = document.createElement('button');
+  likeButton.classList.add('like-button');
+  likeButton.textContent = 'Like';
+  likeButton.addEventListener('click', toggleLike);
+
+  const commentButton = document.createElement('button');
+  commentButton.classList.add('comment-button');
+  commentButton.textContent = 'Comment';
+  commentButton.addEventListener('click', showComments);
+
+  const shareButton = document.createElement('button');
+  shareButton.classList.add('share-button');
+  shareButton.textContent = 'Share';
+  shareButton.addEventListener('click', sharePost);
+
+  // Append the post elements to the post element
+  post.appendChild(postAuthor);
+  post.appendChild(postTitle);
+  post.appendChild(postBody);
+  postActions.appendChild(likeButton);
+  postActions.appendChild(commentButton);
+  postActions.appendChild(shareButton);
+  post.appendChild(postActions);
+
+  // Select the posts section and append the new post element to it
+  const postsSection = document.querySelector('.posts');
+  postsSection.appendChild(post);
+
+  // Reset the input fields
+  authorInput.value = '';
+  titleInput.value = '';
+  bodyInput.value = '';
+}
+
+// Create a function to handle the like button click event
+function toggleLike(event) {
+  const likeButton = event.target;
+  const postActions = likeButton.parentElement;
+  const post = postActions.parentElement;
+  const isLiked = likeButton.classList.contains('liked');
+
+  if (isLiked) {
+    likeButton.classList.remove('liked');
+    likeButton.textContent = 'Like';
+  } else {
+    likeButton.classList.add('liked');
+    likeButton.textContent = 'Liked!';
+  }
+}
+
+// Create a function to handle the comment button click event
+function showComments(event) {
+  const commentButton = event.target;
+  const postActions = commentButton.parentElement;
+  const post = postActions.parentElement;
+  const commentsSection = post.querySelector('.comments');
+
+  if (commentsSection) {
+    commentsSection.classList.toggle('hidden');
+  } else {
+    const newCommentsSection = document.createElement('div');
+    newCommentsSection.classList.add('comments');
+
+    const commentForm = document.createElement('form');
+    commentForm.innerHTML = `
+      <label for="comment">Leave a comment:</label>
+      <textarea id="comment" name="comment"></textarea>
+      <button type="submit">Submit</button>
+    `;
+
+    commentForm.addEventListener('submit', addComment);
+
+    newCommentsSection.appendChild(commentForm);
+
+    post.appendChild(newCommentsSection);
+  }
+}
+// Create a function to handle the share button click event
+function sharePost(event) {
+    const shareButton = event.target;
+    const postActions = shareButton.parentElement;
+    const post = postActions.parentElement;
+    const author = post.querySelector('h3').textContent;
+    const title = post.querySelector('h2').textContent;
+    const body = post.querySelector('p').textContent;
+    const shareText = Check out this post by ${author} - "${title}": ${body};
+    navigator.clipboard.writeText(shareText).then(() => {
+    alert('Post copied to clipboard!');
+    }, () => {
+    alert('Failed to copy post to clipboard.');
+    });
+    }
+    
+    // Create a function to handle the comment form submission
+    function addComment(event) {
+    event.preventDefault(); // prevent the default form submission behavior
+    
+    const commentForm = event.target;
+    const commentInput = commentForm.querySelector('textarea');
+    const comment = commentInput.value;
+    const commentsSection = commentForm.parentElement;
+    const post = commentsSection.parentElement;
+    const postComments = post.querySelector('.post-comments');
+    
+    if (!postComments) {
+    const newPostComments = document.createElement('div');
+    newPostComments.classList.add('post-comments');
+    post.appendChild(newPostComments);
+    postComments = newPostComments;
+    }
+    
+    const newComment = document.createElement('p');
+    newComment.textContent = comment;
+    
+    postComments.appendChild(newComment);
+    
+    commentInput.value = '';
+    }
+    
+    // Set the initial balance to 0
+    let balance = 0;
+    
+    // Select the balance element and update its text content with the initial balance
+    const balanceElement = document.querySelector('.balance');
+    balanceElement.textContent = Balance: ${balance};
+    
+    // Create a function to add to the balance
+    function addToBalance(amount) {
+    balance += amount;
+    balanceElement.textContent = Balance: ${balance};
+    }
+    
+    // Create a function to subtract from the balance
+    function subtractFromBalance(amount) {
+    balance -= amount;
+    balanceElement.textContent = Balance: ${balance};
+    }
